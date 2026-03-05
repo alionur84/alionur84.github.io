@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Horn of Africa — Actors & Interests Matrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:         #0a0e17;
+  --bg2:        #111827;
+  --bg3:        #1a2332;
+  --border:     #1e2d42;
+  --border2:    #2a3f5a;
+  --text:       #e2e8f0;
+  --text-dim:   #8899aa;
+  --text-muted: #4a6080;
+  --gold:       #c9a84c;
+  --gold-dim:   #7a5f2a;
+
+  --pp:   #1a7a4a;  /* ++ */
+  --pp-bg:#0a2a1a;
+  --p:    #2d9b5e;  /* +  */
+  --p-bg: #0d2a1c;
+  --neu:  #3a5068;  /* ~  */
+  --neu-bg:#111e2a;
+  --m:    #c0533a;  /* -  */
+  --m-bg: #2a1208;
+  --mm:   #e03020;  /* -- */
+  --mm-bg:#2d0a05;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.site-header {
+  padding: 48px 40px 32px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 3.5vw, 42px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #fff;
+  max-width: 700px;
+}
+h1 span { color: var(--gold); }
+.header-sub {
+  margin-top: 14px;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 300;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* ── Controls ── */
+.controls {
+  padding: 20px 40px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+.control-group { display: flex; flex-direction: column; gap: 6px; }
+.control-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.pill-group { display: flex; flex-wrap: wrap; gap: 5px; }
+.pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.pill:hover { border-color: var(--gold-dim); color: var(--text); }
+.pill.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #0a0e17;
+  font-weight: 600;
+}
+.pill.actor-pill.active  { background: #1a5c8a; border-color: #2a7ab5; color: #fff; }
+.pill.theme-pill.active  { background: #3a1f6e; border-color: #5a3fa0; color: #fff; }
+
+.search-wrap { position: relative; }
+.search-wrap input {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 5px 12px 5px 30px;
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  width: 200px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.search-wrap input:focus { border-color: var(--gold-dim); }
+.search-wrap input::placeholder { color: var(--text-muted); }
+.search-icon {
+  position: absolute;
+  left: 9px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.reset-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  align-self: flex-end;
+}
+.reset-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+/* ── Legend ── */
+.legend {
+  padding: 10px 40px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 7px; }
+.legend-sym {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  width: 24px;
+  height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 2px;
+}
+.legend-desc { font-size: 11px; color: var(--text-dim); }
+
+/* ── Table wrapper ── */
+.table-outer {
+  padding: 24px 40px 60px;
+  overflow-x: auto;
+}
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  min-width: 1000px;
+}
+
+/* sticky col headers */
+.matrix-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg2);
+  border-bottom: 2px solid var(--gold-dim);
+  padding: 10px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: #fff;
+  white-space: pre-line;
+  vertical-align: bottom;
+  min-width: 66px;
+}
+.matrix-table thead th.th-cat {
+  text-align: left;
+  color: var(--gold);
+  min-width: 120px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.matrix-table thead th.th-interest {
+  text-align: left;
+  min-width: 220px;
+  color: var(--text-dim);
+  font-size: 9px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 500;
+}
+
+/* category column */
+td.td-cat {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  vertical-align: middle;
+  padding: 0 10px;
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* interest column */
+td.td-interest {
+  font-size: 11.5px;
+  color: var(--text);
+  font-weight: 400;
+  padding: 9px 14px 9px 10px;
+  border-right: 2px solid var(--border);
+  line-height: 1.4;
+  vertical-align: middle;
+}
+
+/* value cells */
+td.td-val {
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0;
+  vertical-align: middle;
+  transition: opacity 0.2s, transform 0.2s;
+}
+td.td-val .cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  border-radius: 2px;
+  margin: 2px;
+  transition: all 0.15s;
+}
+td.td-val .cell-inner:hover { filter: brightness(1.3); transform: scale(1.05); }
+
+/* row styles */
+tr.data-row { border-bottom: 1px solid var(--border); }
+tr.data-row:hover td.td-interest { color: #fff; }
+tr.data-row.cat-first td { border-top: 1px solid var(--border2); }
+tr.data-row.dimmed { opacity: 0.15; }
+tr.data-row.hidden { display: none; }
+
+/* value colours */
+.v-pp  { background: var(--pp-bg); color: #4ade80; }
+.v-p   { background: var(--p-bg);  color: #86efac; }
+.v-neu { background: var(--neu-bg); color: #4a6a84; }
+.v-m   { background: var(--m-bg);  color: #f87171; }
+.v-mm  { background: var(--mm-bg); color: #ef4444; }
+
+/* actor column highlight */
+.actor-col-highlight .cell-inner { outline: 1px solid rgba(201,168,76,0.35); }
+
+/* stats bar */
+.stats-bar {
+  padding: 10px 40px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.stats-bar span { color: var(--text-dim); }
+.stats-bar strong { color: var(--gold); }
+
+/* ── Why Section ── */
+.why-section {
+  padding: 32px 40px 56px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+.why-header { margin-bottom: 20px; }
+.why-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.why-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+.why-context {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 16px;
+}
+.why-empty {
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 24px 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+}
+.why-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+.why-card {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 16px 18px 16px 20px;
+  animation: fadeUp 0.2s ease both;
+  position: relative;
+  overflow: hidden;
+}
+.why-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+}
+.why-card.card-pp::before { background: #4ade80; }
+.why-card.card-p::before  { background: #86efac; }
+.why-card.card-neu::before{ background: #3a5068; }
+.why-card.card-m::before  { background: #f87171; }
+.why-card.card-mm::before { background: #ef4444; }
+.why-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+.why-card-sym {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  width: 28px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.why-card-meta { display: flex; flex-direction: column; gap: 2px; }
+.why-card-actor {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+.why-card-interest {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+.why-card-body {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.68;
+}
+.why-card-body strong { color: var(--text); font-weight: 600; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .site-header, .controls, .legend, .table-outer, .stats-bar, .why-section { padding-left: 16px; padding-right: 16px; }
+  h1 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-label">Geopolitical Analysis · Horn of Africa · 2025–2026</div>
+  <h1>Actors <span>&times;</span> Interests Matrix</h1>
+  <p class="header-sub">Mapping the strategic alignments, conflicts, and ambiguities of 13 key actors following Israel's recognition of Somaliland — across 23 interest themes.</p>
+</header>
+
+<div class="controls" id="controls">
+
+  <div class="control-group">
+    <div class="control-label">Filter by Actor</div>
+    <div class="pill-group" id="actor-filters"></div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Filter by Theme</div>
+    <div class="pill-group" id="theme-filters"></div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Filter by Stance</div>
+    <div class="pill-group" id="stance-filters">
+      <span class="pill stance-pill" data-stance="++" style="color:#4ade80; border-color:#1a5a30;">++ Strong support</span>
+      <span class="pill stance-pill" data-stance="+"  style="color:#86efac; border-color:#1a3d20;">+ Support</span>
+      <span class="pill stance-pill" data-stance="~"  style="color:#4a6a84; border-color:#2a3f55;">~ Neutral</span>
+      <span class="pill stance-pill" data-stance="-"  style="color:#f87171; border-color:#5a2020;">- Opposes</span>
+      <span class="pill stance-pill" data-stance="--" style="color:#ef4444; border-color:#7a1010;">-- Strongly opposes</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="control-label">Search</div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search-input" placeholder="Search interests…"/>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="reset-btn">↺ Reset</button>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-sym v-pp">++</span><span class="legend-desc">Strong / direct interest or support</span></div>
+  <div class="legend-item"><span class="legend-sym v-p">+</span><span class="legend-desc">Moderate interest or support</span></div>
+  <div class="legend-item"><span class="legend-sym v-neu">~</span><span class="legend-desc">Neutral / indirect interest</span></div>
+  <div class="legend-item"><span class="legend-sym v-m">-</span><span class="legend-desc">Opposes / contrary interest</span></div>
+  <div class="legend-item"><span class="legend-sym v-mm">--</span><span class="legend-desc">Strongly opposes / existential conflict</span></div>
+</div>
+
+<div class="table-outer">
+<table class="matrix-table" id="matrix-table">
+  <thead id="thead"></thead>
+  <tbody id="tbody"></tbody>
+</table>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <span>Showing <strong id="stat-rows">—</strong> interest rows</span>
+  <span>·</span>
+  <span><strong id="stat-actors">—</strong> actors visible</span>
+
+<div class="why-section" id="why-section">
+  <div class="why-header">
+    <div class="why-label">Context &amp; Analysis</div>
+    <div class="why-title">Why these positions?</div>
+    <div class="why-context" id="why-context">Select actors, stances, or themes above to load explanations.</div>
+  </div>
+  <div id="why-cards"></div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const ACTORS = [
+  "Ethiopia","Somalia","Somaliland","Egypt","Turkey",
+  "EU","Israel","UAE","USA","Saudi Arabia","Iran /\nHouthis","African\nUnion","China"
+];
+
+const ACTOR_DISPLAY = [
+  "Ethiopia","Somalia","Somaliland","Egypt","Turkey",
+  "EU","Israel","UAE","USA","Saudi Arabia","Iran /\nHouthis","African Union","China"
+];
+
+const THEMES = [
+  "Sea Access & Trade",
+  "Territorial Integrity",
+  "Security",
+  "Alliance Politics",
+  "Economic & Resources",
+  "Diplomatic & Domestic"
+];
+
+// [category, interest, ...13 actor values]
+const ROWS = [
+  ["Sea Access & Trade","Red Sea / Gulf of Aden freedom of navigation","++","+","+","++","++","++","++","++","++","++","--","+","++"],
+  ["Sea Access & Trade","Bab el-Mandeb Strait control / security","+","+","+","++","++","++","++","++","++","++","--","+","++"],
+  ["Sea Access & Trade","Berbera port access & development","++","-","++","~","~","~","++","++","++","~","~","~","--"],
+  ["Sea Access & Trade","Djibouti alternative / Camp Lemonnier","++","~","+","~","~","~","+","~","++","~","~","~","-"],
+  ["Territorial Integrity","Preserve Somalia's territorial integrity","~","++","--","++","++","++","--","~","++","++","~","++","++"],
+  ["Territorial Integrity","Somaliland international recognition","+","--","++","--","--","--","++","+","~","--","~","--","--"],
+  ["Territorial Integrity","Preventing separatist precedent (Africa-wide)","~","++","--","+","+","++","~","~","+","++","~","++","++"],
+  ["Security","Counter Al-Shabaab / Islamist terrorism","~","++","+","~","+","+","~","~","++","+","~","+","~"],
+  ["Security","Counter Iran & Houthi influence","~","~","~","~","+","+","++","++","++","+","--","+","~"],
+  ["Security","Military presence / basing rights in region","+","+","++","+","++","+","++","++","++","++","+","~","++"],
+  ["Security","Counter China's regional footprint","~","~","~","~","~","+","+","~","++","++","~","~","--"],
+  ["Alliance Politics","Abraham Accords expansion","~","~","++","~","-","~","++","+","~","-","--","-","--"],
+  ["Alliance Politics","Turkey–Somalia military alliance","~","++","--","-","++","~","-","-","~","-","~","~","~"],
+  ["Alliance Politics","Saudi-led Red Sea Council / regional bloc","~","++","~","++","++","~","-","-","~","++","~","+","~"],
+  ["Alliance Politics","AU border-preservation norms","~","++","--","+","+","++","--","~","+","++","~","++","++"],
+  ["Economic & Resources","Somaliland mineral wealth (lithium, coltan)","~","~","++","~","~","~","++","++","++","~","~","~","+"],
+  ["Economic & Resources","Horn of Africa agricultural investment / food security","++","~","~","~","~","~","~","+","~","++","~","~","+"],
+  ["Economic & Resources","Oil & gas exploration rights in Somalia","~","+","~","~","++","~","~","~","~","+","~","~","+"],
+  ["Economic & Resources","Refugee flow prevention / migration control","~","~","~","+","+","++","~","~","+","+","~","+","~"],
+  ["Diplomatic & Domestic","Break diplomatic isolation (post-Gaza)","~","~","++","~","~","~","++","~","~","~","~","~","~"],
+  ["Diplomatic & Domestic","Domestic political legitimacy","~","+","++","+","+","~","++","~","+","+","+","~","~"],
+  ["Diplomatic & Domestic","Counter-balance UAE regional influence","~","+","~","+","+","~","~","~","~","++","~","~","~"],
+  ["Diplomatic & Domestic","GERD / Nile water security","++","-","~","--","~","~","~","~","~","~","~","~","~"],
+];
+
+// ── State ─────────────────────────────────────────────────────────
+let activeActors  = new Set();
+let activeThemes  = new Set();
+let activeStances = new Set();
+let searchTerm    = "";
+
+// ── Build actor filter pills ───────────────────────────────────────
+const actorContainer = document.getElementById("actor-filters");
+ACTORS.forEach((a, i) => {
+  const pill = document.createElement("span");
+  pill.className = "pill actor-pill";
+  pill.textContent = a.replace("\n"," ");
+  pill.dataset.actor = i;
+  pill.addEventListener("click", () => {
+    if (activeActors.has(i)) activeActors.delete(i);
+    else activeActors.add(i);
+    pill.classList.toggle("active");
+    render();
+  });
+  actorContainer.appendChild(pill);
+});
+
+// ── Build theme filter pills ───────────────────────────────────────
+const themeContainer = document.getElementById("theme-filters");
+THEMES.forEach(t => {
+  const pill = document.createElement("span");
+  pill.className = "pill theme-pill";
+  pill.textContent = t;
+  pill.dataset.theme = t;
+  pill.addEventListener("click", () => {
+    if (activeThemes.has(t)) activeThemes.delete(t);
+    else activeThemes.add(t);
+    pill.classList.toggle("active");
+    render();
+  });
+  themeContainer.appendChild(pill);
+});
+
+// ── Stance pills ───────────────────────────────────────────────────
+document.querySelectorAll(".stance-pill").forEach(pill => {
+  pill.addEventListener("click", () => {
+    const s = pill.dataset.stance;
+    if (activeStances.has(s)) activeStances.delete(s);
+    else activeStances.add(s);
+    pill.classList.toggle("active");
+    render();
+  });
+});
+
+// ── Search ─────────────────────────────────────────────────────────
+document.getElementById("search-input").addEventListener("input", e => {
+  searchTerm = e.target.value.toLowerCase();
+  render();
+});
+
+// ── Reset ──────────────────────────────────────────────────────────
+document.getElementById("reset-btn").addEventListener("click", () => {
+  activeActors.clear(); activeThemes.clear(); activeStances.clear();
+  searchTerm = "";
+  document.getElementById("search-input").value = "";
+  document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+  render();
+});
+
+// ── Value → CSS class ──────────────────────────────────────────────
+function valClass(v) {
+  if (v === "++") return "v-pp";
+  if (v === "+")  return "v-p";
+  if (v === "~")  return "v-neu";
+  if (v === "-")  return "v-m";
+  if (v === "--") return "v-mm";
+  return "v-neu";
+}
+
+// ── Build thead ────────────────────────────────────────────────────
+function buildHeader(visibleActorIdxs) {
+  const thead = document.getElementById("thead");
+  thead.innerHTML = "";
+  const tr = document.createElement("tr");
+
+  const thCat = document.createElement("th");
+  thCat.className = "th-cat"; thCat.textContent = "Category";
+  tr.appendChild(thCat);
+
+  const thInt = document.createElement("th");
+  thInt.className = "th-interest"; thInt.textContent = "Interest / Theme";
+  tr.appendChild(thInt);
+
+  visibleActorIdxs.forEach(i => {
+    const th = document.createElement("th");
+    th.textContent = ACTOR_DISPLAY[i];
+    th.dataset.actorIdx = i;
+    tr.appendChild(th);
+  });
+  thead.appendChild(tr);
+}
+
+// ── Render ─────────────────────────────────────────────────────────
+function render() {
+  // Which actors to show
+  const visibleActors = activeActors.size > 0
+    ? [...activeActors].sort((a,b) => a-b)
+    : ACTORS.map((_,i) => i);
+
+  buildHeader(visibleActors);
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+
+  let catPrev = null;
+  let visibleRowCount = 0;
+
+  ROWS.forEach((row, ri) => {
+    const [cat, interest, ...vals] = row;
+
+    // Theme filter
+    if (activeThemes.size > 0 && !activeThemes.has(cat)) return;
+
+    // Search filter
+    if (searchTerm && !interest.toLowerCase().includes(searchTerm) && !cat.toLowerCase().includes(searchTerm)) return;
+
+    // Stance filter: show row if ANY visible actor has an active stance
+    if (activeStances.size > 0) {
+      const hasMatch = visibleActors.some(ai => activeStances.has(vals[ai]));
+      if (!hasMatch) return;
+    }
+
+    visibleRowCount++;
+
+    const tr = document.createElement("tr");
+    tr.className = "data-row" + (cat !== catPrev ? " cat-first" : "");
+    tr.dataset.cat = cat;
+    tr.dataset.interest = interest.toLowerCase();
+
+    // Category cell
+    const tdCat = document.createElement("td");
+    tdCat.className = "td-cat";
+    if (cat !== catPrev) {
+      tdCat.textContent = cat;
+    }
+    tr.appendChild(tdCat);
+    catPrev = cat;
+
+    // Interest cell
+    const tdInt = document.createElement("td");
+    tdInt.className = "td-interest";
+    tdInt.textContent = interest;
+    tr.appendChild(tdInt);
+
+    // Value cells
+    visibleActors.forEach(ai => {
+      const v = vals[ai] || "~";
+      const td = document.createElement("td");
+      td.className = "td-val";
+
+      // Dim if stance filter active and this cell doesn't match
+      const dimmed = activeStances.size > 0 && !activeStances.has(v);
+
+      const inner = document.createElement("div");
+      inner.className = "cell-inner " + valClass(v);
+      if (dimmed) inner.style.opacity = "0.2";
+      inner.textContent = v;
+      inner.title = `${ACTORS[ai]} × ${interest}: ${v}`;
+      td.appendChild(inner);
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  // Stats
+  document.getElementById("stat-rows").textContent = visibleRowCount;
+  document.getElementById("stat-actors").textContent = visibleActors.length;
+  renderWhy();
+}
+
+
+// ── WHY KNOWLEDGE BASE ─────────────────────────────────────────────
+const WHY = {
+  "12|Red Sea / Gulf of Aden freedom of navigation": { stance:"++", text:"China's Belt and Road Initiative depends on unobstructed Red Sea passage. Beijing opened its <strong>first overseas military base in Djibouti (2017)</strong> precisely to protect this corridor, and holds ownership stakes in Doraleh Multipurpose Port." },
+  "12|Bab el-Mandeb Strait control / security": { stance:"++", text:"Virtually all Chinese maritime trade between Asia and Europe transits Bab el-Mandeb. China manages <strong>Djibouti's free trade zones</strong> and port infrastructure — making the strait's stability a direct BRI economic imperative." },
+  "12|Berbera port access & development": { stance:"--", text:"Empowering Berbera <strong>directly threatens Djibouti's dominance</strong> — and China's massive investment in it. The Israel–UAE alignment around Berbera creates a competing hub that risks displacing China's established Red Sea sphere of influence." },
+  "12|Djibouti alternative / Camp Lemonnier": { stance:"-", text:"China actively wants Djibouti to remain the dominant hub. A US military base in Berbera — explicitly pitched by Somaliland as a Djibouti alternative — would place American forces <strong>flanking China's own base</strong> on the opposite side of the Gulf of Aden." },
+  "12|Preserve Somalia's territorial integrity": { stance:"++", text:"At the UN Security Council, China's delegate declared Somaliland <strong>'an integral part of Somali territory'</strong> and demanded Israel 'immediately rectify the situation.' Defending Somalia serves China's non-interference principle and blocks the Israel–UAE axis from gaining a foothold." },
+  "12|Somaliland international recognition": { stance:"--", text:"China has two existential reasons to oppose this. First, it threatens Djibouti investments. Second — and critically — <strong>Somaliland established mutual representative offices with Taiwan in 2020</strong> and signed a coast guard agreement with Taipei in August 2025. Beijing views normalising Somaliland as legitimising Taiwan globally." },
+  "12|Preventing separatist precedent (Africa-wide)": { stance:"++", text:"For Beijing, a successful Somaliland secession carries a uniquely dangerous risk: it could <strong>'embolden Taiwan's own independence aspirations.'</strong> The One-China principle makes this far more urgent for China than for any other actor in the matrix." },
+  "12|Counter China's regional footprint": { stance:"--", text:"This row is literally about countering China. Somaliland's Berbera offer to the US was <strong>'explicitly intended to limit Chinese military and economic influence'</strong> in the region. Beijing is actively engaging diplomacy — especially with Ethiopia — to prevent this materialising." },
+  "12|Abraham Accords expansion": { stance:"--", text:"China opposes the Accords' regional expansion because it is the vehicle through which Israel and the UAE are building the <strong>'Axis of Secession'</strong> — empowering breakaway regions to secure trade corridors and exclude Chinese influence from the Red Sea." },
+  "12|Military presence / basing rights in region": { stance:"++", text:"China's Djibouti base is its first overseas military facility and a critical BRI security node. Beijing is working to <strong>ensure no rival outflanks it</strong> — particularly blocking a US base in Somaliland's Berbera, which would create a strategic pincer around China's position." },
+  "12|Somaliland mineral wealth (lithium, coltan)": { stance:"+", text:"China has a broad BRI interest in <strong>African critical mineral supply chains</strong>. However, Somaliland's mineral pitch is currently aimed at the US and Israel — making this a potential future competition rather than an active priority for Beijing." },
+  "6|Red Sea / Gulf of Aden freedom of navigation": { stance:"++", text:"The Houthi campaign launched after October 2023 <strong>effectively shut down Israel's Port of Eilat</strong> — its only Red Sea outlet. Securing the Gulf of Aden became an existential military priority, directly triggering the Somaliland recognition." },
+  "6|Bab el-Mandeb Strait control / security": { stance:"++", text:"Somaliland sits <strong>300–500km across Bab el-Mandeb from Houthi-controlled Yemen</strong>. A presence there gives Israel forward depth for intelligence, drone surveillance, and potential interception of Houthi attacks — the single most urgent driver of the recognition." },
+  "6|Berbera port access & development": { stance:"++", text:"Berbera fills the security vacuum left by <strong>Israel's broken relations with Eritrea (2020) and Sudan (2023)</strong>. It offers a forward operating base for intelligence-gathering and drone operations, restoring Israel's strategic depth in the Horn after years of erosion." },
+  "6|Somaliland international recognition": { stance:"++", text:"Israel is the <strong>first UN member state</strong> to formally recognise Somaliland. Four converging triggers: the Houthi blockade of Eilat; Netanyahu's domestic pressure (Qatargate scandal, 2026 elections); collapse of the UAE-backed STC in Yemen; and ~4 years of secret negotiations accelerated by Somaliland's new president." },
+  "6|Preserve Somalia's territorial integrity": { stance:"--", text:"Israel's recognition is a <strong>direct challenge to Somalia's territorial claims</strong> — condemned as an 'existential threat.' Israel was the sole country defended by the US at the emergency UN Security Council session called specifically over this recognition." },
+  "6|Counter Iran & Houthi influence": { stance:"++", text:"Countering Iran and the Houthis is the <strong>primary security driver</strong>. A Somaliland foothold turns the Gulf of Aden into a two-sided arena — Israel opposite Houthi-controlled Yemen — fundamentally changing the operational calculus for maritime interdiction." },
+  "6|Break diplomatic isolation (post-Gaza)": { stance:"++", text:"Following Gaza, Israel faced severe international isolation. Partnering with a <strong>functioning, democratic, Muslim-majority entity</strong> like Somaliland provides a diplomatic 'exit door' — demonstrating Israel can still forge alliances and expand the Abraham Accords even amid global backlash." },
+  "6|Abraham Accords expansion": { stance:"++", text:"Somaliland pledged to join the Abraham Accords upon recognition. This extends the normalisation framework into the Horn of Africa — a region where <strong>major states like Saudi Arabia remain unwilling to normalise</strong> due to Gaza — giving Israel a low-cost diplomatic win." },
+  "6|AU border-preservation norms": { stance:"--", text:"The AU firmly rejected Israel's recognition as setting a <strong>'dangerous precedent for African regional stability.'</strong> Israel's move directly challenges the AU's foundational post-colonial border norm — one of the few issues the entire 55-member AU speaks on with one voice." },
+  "8|Preserve Somalia's territorial integrity": { stance:"++", text:"The US firmly upholds the <strong>'One Somalia' policy</strong>. Recognising Somaliland risks rupturing counterterrorism coordination against Al-Shabaab, and could embolden other semi-autonomous regions like Puntland and Jubaland to pursue formal secession — worsening instability." },
+  "8|Somaliland international recognition": { stance:"~", text:"Genuinely ambiguous. The Trump administration refused to follow Israel but is <strong>conducting an internal policy review</strong>. Congressional pressure (including Senator Ted Cruz) is growing. Options under consideration: upgrading to a liaison office, direct security cooperation, and separate State Dept. travel advisories for Somaliland." },
+  "8|Berbera port access & development": { stance:"++", text:"US defense planners recognise Berbera's <strong>enormous strategic value</strong> near Bab el-Mandeb — a natural alternative to Djibouti where China also operates a base. Somaliland has explicitly offered the US exclusive mineral access and Berbera basing rights in exchange for recognition." },
+  "8|Counter Al-Shabaab / Islamist terrorism": { stance:"++", text:"The US operates <strong>Camp Lemonnier in Djibouti</strong> with 4,000+ personnel focused on counterterrorism. Preserving the Mogadishu relationship is central to Al-Shabaab operations — which is precisely why Washington fears any move that could fracture that partnership." },
+  "8|Counter China's regional footprint": { stance:"++", text:"A Berbera base would address the <strong>Djibouti vulnerability</strong> — where China's military base sits alongside Camp Lemonnier. This is the core argument in Congress for recognition: framing Somaliland as a strategic counter-China move in the Horn of Africa." },
+  "8|Djibouti alternative / Camp Lemonnier": { stance:"++", text:"Washington is acutely aware that <strong>China and the US share the same host country in Djibouti</strong>. Berbera offers a strategically superior alternative: reducing dependency on a co-located base while enhancing capabilities against Houthi maritime disruption." },
+  "9|Red Sea / Gulf of Aden freedom of navigation": { stance:"++", text:"Saudi Vision 2030 depends on Red Sea stability. Riyadh <strong>revived the Red Sea Council</strong> and is conducting joint maritime patrols with Egypt, Qatar, and Turkey — framing the Israel–UAE 'axis of fragmentation' as a direct threat to the maritime routes that underpin its economic transformation." },
+  "9|Preserve Somalia's territorial integrity": { stance:"++", text:"Saudi Arabia signed a <strong>military cooperation agreement with Somalia on February 9, 2026</strong> and is embedding itself as Somalia's primary security guarantor. Riyadh views the recognition as a 'grave threat' granting Tel Aviv and Abu Dhabi a strategic foothold near Bab el-Mandeb." },
+  "9|Counter-balance UAE regional influence": { stance:"++", text:"Saudi–UAE rivalry runs across the entire Horn. In Sudan, Riyadh backs the SAF against the UAE-backed RSF — even <strong>denying Emirati military flights through Saudi airspace</strong> and facilitating a $1.5B Pakistani arms deal for Khartoum. Somalia is another front in this same contest for regional dominance." },
+  "9|Horn of Africa agricultural investment / food security": { stance:"++", text:"Saudi Arabia's 80% food import dependency drives massive <strong>agricultural land investments in Ethiopia and Sudan</strong>. When Saudi farm leases in Gambella (Ethiopia) and Sudan caused local displacement, Riyadh learned it needs community partnerships — not just elite deals — to protect Vision 2030 food security goals." },
+  "3|GERD / Nile water security": { stance:"--", text:"The Grand Ethiopian Renaissance Dam is an <strong>existential threat for Egypt</strong>. The Nile provides virtually all of Egypt's fresh water; even a 2% flow reduction could destroy major agricultural areas. Egypt deployed 1,000 troops to Mogadishu partly to signal resistance to the Israeli–Ethiopian alignment strengthening Addis Ababa." },
+  "3|Red Sea / Gulf of Aden freedom of navigation": { stance:"++", text:"The Suez Canal generates <strong>billions in annual revenue</strong> and is the lifeblood of Egypt's economy. Red Sea instability directly depresses canal traffic — as Houthi attacks proved in 2024. Egypt is fighting to reassert itself as a Red Sea security actor, not just a bystander." },
+  "4|Turkey–Somalia military alliance": { stance:"++", text:"Turkey operates the <strong>TURKSOM base in Mogadishu</strong>, trains Somali forces, holds a maritime deal covering 30% of fishing rights, and has oil/gas exploration rights. When Israel recognised Somaliland, Turkey deployed F-16 jets, advanced radar, and is reportedly building a new base in Sanaag — making it the most operationally committed external defender of Somalia." },
+  "5|Refugee flow prevention / migration control": { stance:"++", text:"The EU's NDICI instrument allocates <strong>billions to Horn of Africa programs</strong> with migration control as a core driver. Horn instability directly generates refugee flows toward Europe, making stability as much a border management imperative as a geopolitical one." },
+  "5|Preserve Somalia's territorial integrity": { stance:"++", text:"The EU condemned Israel's recognition alongside the UK and AU, reaffirming <strong>'unwavering support for Somalia's unity, sovereignty, and territorial integrity.'</strong> This aligns with the EU's principle of preserving colonial-era borders to prevent widespread instability." },
+  "1|Somaliland international recognition": { stance:"--", text:"Somalia views the recognition as an <strong>'existential threat and deliberate attack.'</strong> In retaliation it cancelled port and security agreements with the UAE, formed a counter-alliance with Turkey, Egypt, and Saudi Arabia, and signed a military pact with Riyadh." },
+  "1|Turkey–Somalia military alliance": { stance:"++", text:"Turkey provides Somalia's most muscular external guarantee: TURKSOM base, F-16 deployments, radar systems, maritime security, and a reported new Sanaag base. For Mogadishu, Turkey is the <strong>most operationally present guarantor</strong> of its territorial integrity." },
+  "0|Berbera port access & development": { stance:"++", text:"Sea access is <strong>existential for Ethiopia</strong> — the world's most populous landlocked country (120M+), with 95% of trade through Djibouti. The 2024 MoU with Somaliland promising Berbera access is the cornerstone of Ethiopia's long-term economic diversification strategy." },
+  "0|GERD / Nile water security": { stance:"++", text:"The dam will provide electricity to the <strong>60% of Ethiopians currently without power</strong>. Ethiopia views it as a development imperative — even as Egypt treats it as an existential water threat, creating one of the Horn's most intractable bilateral tensions." },
+  "0|Somaliland international recognition": { stance:"+", text:"Israel's recognition <strong>strengthens Ethiopia's own MoU</strong> with Somaliland. However, Ethiopia is maintaining 'strategic ambiguity' — benefiting from the shift while avoiding a full diplomatic rupture with Somalia and Arab states that could jeopardise other regional relationships." },
+  "2|Somaliland international recognition": { stance:"++", text:"After <strong>35 years of diplomatic isolation</strong>, Israel's recognition is Somaliland's primary foreign policy achievement. The new president accelerated secret negotiations with Israel. Somaliland has simultaneously pledged to join the Abraham Accords and is offering the US exclusive mineral access and Berbera basing rights to court Washington." },
+  "2|Berbera port access & development": { stance:"++", text:"Berbera is Somaliland's <strong>primary geopolitical asset</strong> — simultaneously offered to Israel, the UAE, and the US. Developing Berbera as a regional hub is central to both Somaliland's economic ambition and its diplomatic strategy for winning further recognitions." },
+  "2|Somaliland mineral wealth (lithium, coltan)": { stance:"++", text:"Somaliland is actively marketing <strong>potential reserves of lithium and coltan</strong> to secure US recognition. Officials acknowledge independent geological verification is still lacking — but the pitch is a deliberate strategy to frame Somaliland as a critical partner in the global minerals race." },
+  "10|Red Sea / Gulf of Aden freedom of navigation": { stance:"--", text:"The Houthis have conducted a <strong>sustained attack campaign against Israeli-linked shipping</strong> since late 2023, effectively closing Israel's Port of Eilat. Disrupting Red Sea navigation for Israeli and Western commercial interests is a core operational objective — not a side effect." },
+  "10|Bab el-Mandeb Strait control / security": { stance:"--", text:"The Houthis control the western Yemen coastline <strong>directly overlooking Bab el-Mandeb</strong>. This chokepoint is their primary leverage. They explicitly warned that any Israeli military presence in Somaliland — on the opposite shore — would be treated as a 'military target.'" },
+  "10|Counter Iran & Houthi influence": { stance:"--", text:"This row is literally about countering them. Iran and the Houthis are the <strong>primary threat</strong> driving Israel's Somaliland recognition, the US's regional posture, and Saudi Arabia's Red Sea Council. Iran condemned the recognition as an 'expansionist threat' near its sphere of influence." },
+  "10|Abraham Accords expansion": { stance:"--", text:"The Abraham Accords are Iran's <strong>primary strategic adversary framework</strong> — a US-backed Arab–Israeli normalisation architecture designed to isolate Tehran. Somaliland joining would extend this architecture into the Horn, flanking Iran's Houthi proxy on a new front." },
+  "11|Somaliland international recognition": { stance:"--", text:"The AU <strong>firmly rejected Israel's recognition</strong>, warning it sets a 'dangerous precedent for African regional stability.' With dozens of active or latent separatist movements across Africa, the AU fears a continental domino effect — from Ambazonia to Biafra to Azawad." },
+  "11|Preventing separatist precedent (Africa-wide)": { stance:"++", text:"The AU's founding border-preservation principle was inherited from the OAU (1963) specifically to prevent post-independence wars. A successful Somaliland normalisation — especially followed by US recognition — could <strong>embolden separatist movements continent-wide</strong>." },
+  "7|Berbera port access & development": { stance:"++", text:"The UAE has <strong>heavy existing investments in Berbera port</strong> and has been Somaliland's most important economic partner. Protecting this explains why the UAE <strong>abstained from the joint Arab condemnation</strong> of Israel's recognition — it could not afford to alienate Somaliland." },
+  "7|Somaliland international recognition": { stance:"+", text:"The UAE's <strong>abstention from the joint Arab condemnation</strong> was the clearest possible signal of where its real interests lie. It is an Abraham Accords partner that benefits from the Israel–Somaliland axis but faces Arab solidarity pressure — maintaining a deliberate strategic ambiguity." },
+};
+
+const STANCE_LABEL = { "++":"Strong support", "+":"Support", "~":"Neutral", "-":"Opposes", "--":"Strongly opposes" };
+
+function cardClass(v) {
+  if (v==="++") return "card-pp";
+  if (v==="+")  return "card-p";
+  if (v==="~")  return "card-neu";
+  if (v==="-")  return "card-m";
+  if (v==="--") return "card-mm";
+  return "card-neu";
+}
+
+function renderWhy() {
+  const container = document.getElementById("why-cards");
+  const contextEl = document.getElementById("why-context");
+  container.innerHTML = "";
+
+  const hasFilter = activeActors.size>0 || activeThemes.size>0 || activeStances.size>0 || searchTerm;
+  if (!hasFilter) {
+    contextEl.textContent = "Select actors, stances, or themes above to load explanations.";
+    container.innerHTML = '<div class="why-empty">No filters active — use the controls above to explore.</div>';
+    return;
+  }
+
+  const scopeActors = activeActors.size>0 ? [...activeActors] : ACTORS.map((_,i)=>i);
+
+  const visibleInterests = [];
+  ROWS.forEach(row => {
+    const [cat, interest, ...vals] = row;
+    if (activeThemes.size>0 && !activeThemes.has(cat)) return;
+    if (searchTerm && !interest.toLowerCase().includes(searchTerm) && !cat.toLowerCase().includes(searchTerm)) return;
+    if (activeStances.size>0) {
+      const hasMatch = scopeActors.some(ai => activeStances.has(vals[ai]));
+      if (!hasMatch) return;
+    }
+    visibleInterests.push({ cat, interest, vals });
+  });
+
+  const cards = [];
+  visibleInterests.forEach(({ interest, vals }) => {
+    scopeActors.forEach(ai => {
+      const v = vals[ai];
+      if (activeStances.size>0 && !activeStances.has(v)) return;
+      const key = `${ai}|${interest}`;
+      if (WHY[key]) cards.push({ ai, interest, v, ...WHY[key] });
+    });
+  });
+
+  const parts = [];
+  if (activeActors.size>0) parts.push([...activeActors].map(i=>ACTORS[i].replace("\n"," ")).join(", "));
+  if (activeThemes.size>0) parts.push([...activeThemes].join(", "));
+  if (activeStances.size>0) parts.push([...activeStances].map(s=>STANCE_LABEL[s]).join(", "));
+  contextEl.textContent = parts.length ? `Showing context for: ${parts.join(" · ")}` : "Showing all available context.";
+
+  if (cards.length===0) {
+    container.innerHTML = '<div class="why-empty">No detailed context available for this combination yet.</div>';
+    return;
+  }
+
+  cards.forEach(({ ai, interest, v, text }, idx) => {
+    const card = document.createElement("div");
+    card.className = `why-card ${cardClass(v)}`;
+    card.style.animationDelay = `${idx*0.04}s`;
+    card.innerHTML = `
+      <div class="why-card-head">
+        <span class="why-card-sym ${valClass(v)}">${v}</span>
+        <div class="why-card-meta">
+          <span class="why-card-actor">${ACTORS[ai].replace("\\n"," ")}</span>
+          <span class="why-card-interest">${interest}</span>
+        </div>
+      </div>
+      <div class="why-card-body">${text}</div>`;
+    container.appendChild(card);
+  });
+}
+
+
+// ── Initial render ─────────────────────────────────────────────────
+render();
+renderWhy();
+</script>
+</body>
+</html>
